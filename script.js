@@ -1,97 +1,126 @@
-// Custom Cursor Glow Effect
-document.addEventListener('mousemove', (e) => {
-    const glow = document.querySelector('.cursor-glow');
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+// Set current year in footer
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ==========================================================================
+   Theme Management (Dark/Light Mode)
+   ========================================================================== */
+const themeToggle = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+const themeIcon = themeToggle.querySelector('i');
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('portfolio-theme');
+if (savedTheme) {
+    htmlElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = htmlElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    htmlElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('portfolio-theme', newTheme);
+    updateThemeIcon(newTheme);
 });
 
-// Smooth Scrolling for Anchors
+function updateThemeIcon(theme) {
+    if (theme === 'light') {
+        themeIcon.className = 'fas fa-sun';
+    } else {
+        themeIcon.className = 'fas fa-moon';
+    }
+}
+
+/* ==========================================================================
+   Smooth Scrolling for Navigation Links
+   ========================================================================== */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
         
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
+            
+            // Update active state in nav
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            this.classList.add('active');
         }
     });
 });
 
-// Real Form Submission using FormSubmit (Temporarily disabled for initial activation)
-/*
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btn = this.querySelector('button');
-    const originalText = btn.innerHTML;
-    
-    // Animate button
-    btn.innerHTML = 'Sending...';
-    btn.style.opacity = '0.7';
-    
-    // Get values
-    const nameVal = document.getElementById("name").value;
-    const emailVal = document.getElementById("email").value;
-    const messageVal = document.getElementById("message").value;
+/* ==========================================================================
+   Scroll Reveal Animations & Skill Bars
+   ========================================================================== */
+const revealElements = document.querySelectorAll('.reveal');
+const skillBars = document.querySelectorAll('.skill-bar-fill');
 
-    fetch("https://formsubmit.co/ajax/intumintuchintu76@gmail.com", {
-        method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            name: nameVal,
-            email: emailVal,
-            message: messageVal,
-            _replyto: emailVal,
-            _subject: "New Message from Portfolio Website!"
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        btn.innerHTML = 'Message Sent! ✨';
-        btn.style.background = 'linear-gradient(90deg, #00ff88, #00aaff)';
-        btn.style.opacity = '1';
-        this.reset();
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = '';
-        }, 3000);
-    })
-    .catch(error => {
-        btn.innerHTML = 'Error Sending ❌';
-        btn.style.opacity = '1';
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-        }, 3000);
-    });
-});
-*/
-
-// Simple Scroll Animation (Fade in on scroll)
-const observerOptions = {
-    threshold: 0.1
+const revealOptions = {
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
 };
 
-const observer = new IntersectionObserver((entries) => {
+const scrollObserver = new IntersectionObserver(function(entries, observer) {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            observer.unobserve(entry.target);
+        if (!entry.isIntersecting) {
+            return;
+        } else {
+            // Add active class to fade in
+            entry.target.classList.add('active');
+            
+            // If it's a skill card, animate the progress bar
+            if (entry.target.classList.contains('glass-card') && entry.target.querySelector('.skill-bar-fill')) {
+                const bar = entry.target.querySelector('.skill-bar-fill');
+                const targetWidth = bar.getAttribute('data-width');
+                // Small delay for staggered effect
+                setTimeout(() => {
+                    bar.style.width = targetWidth;
+                }, 300);
+            }
+            
+            // Optional: Stop observing once revealed
+            // observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, revealOptions);
 
-document.querySelectorAll('section').forEach(section => {
-    if (section.id !== 'home') {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        observer.observe(section);
-    }
+revealElements.forEach(el => {
+    scrollObserver.observe(el);
 });
+
+/* ==========================================================================
+   Custom Cursor Glow (Optional Micro-interaction)
+   ========================================================================== */
+// Removed global glow div to prevent lag on lower-end devices, 
+// relying on CSS box-shadow glow effects instead for better performance.
+
+/* ==========================================================================
+   Contact Form Validation & UI State
+   ========================================================================== */
+const contactForm = document.getElementById('contactForm');
+const formMessage = document.getElementById('formMessage');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = submitBtn.querySelector('.btn-text');
+const spinner = submitBtn.querySelector('.spinner');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        // Basic HTML5 validation is handled by the browser because of 'required' attributes.
+        // We add this event listener to provide UI feedback BEFORE it sends to FormSubmit.
+        
+        // Show loading state
+        btnText.style.display = 'none';
+        spinner.style.display = 'block';
+        submitBtn.style.opacity = '0.7';
+        submitBtn.style.cursor = 'not-allowed';
+        
+        // FormSubmit handles the actual sending and captcha. 
+        // We let the default HTML form submission proceed to FormSubmit.co
+    });
+}

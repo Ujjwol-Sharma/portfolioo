@@ -1,0 +1,15 @@
+# Ignore Node modules just in case
+node_modules/
+npm-debug.log*
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore temp scripts
+push.ps1
