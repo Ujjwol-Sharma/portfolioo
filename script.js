@@ -133,27 +133,21 @@ if (contactForm) {
         };
         
         try {
-            // Send to Netlify Function
-            const response = await fetch('/.netlify/functions/sendEmail', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            // Send using EmailJS
+            // YOU MUST REPLACE THESE WITH YOUR ACTUAL IDS FROM EMAILJS
+            const SERVICE_ID = 'YOUR_SERVICE_ID';
+            const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
             
-            const result = await response.json();
+            await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, contactForm);
             
-            if (response.ok) {
-                // Success
-                formMessage.textContent = 'Message sent successfully! I will get back to you soon.';
-                formMessage.style.color = '#4ade80'; // green
-                formMessage.style.display = 'block';
-                contactForm.reset();
-            } else {
-                throw new Error(result.message || 'Error sending message');
-            }
+            // Success
+            formMessage.textContent = 'Message sent successfully! I will get back to you soon.';
+            formMessage.style.color = '#4ade80'; // green
+            formMessage.style.display = 'block';
+            contactForm.reset();
         } catch (error) {
-            console.error('Email error:', error);
-            formMessage.textContent = 'Oops! Failed to send. Please use the Direct Email button instead.';
+            console.error('EmailJS error:', error);
+            formMessage.textContent = 'Oops! Failed to send. Please check your EmailJS keys or email me directly.';
             formMessage.style.color = '#f87171'; // red
             formMessage.style.display = 'block';
         } finally {
