@@ -111,6 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFired = false;
     let gameState = 'playing';
 
+    const kickBtn = document.getElementById('kick-btn');
+    if (kickBtn) {
+        kickBtn.addEventListener('click', () => {
+            if (gameState === 'won' || isFired) return;
+            isFired = true;
+            sling.bodyB = null;
+            sling.render.visible = false;
+            sounds.kick.play();
+            // Apply upward velocity to shoot straight into the goal
+            Matter.Body.setVelocity(ball, { x: 0, y: -20 });
+        });
+    }
+
     Events.on(mouseConstraint, 'enddrag', function(e) {
         if (e.body === ball && !isFired) {
             const dist = Vector.magnitude(Vector.sub(ball.position, { x: startX, y: startY }));
