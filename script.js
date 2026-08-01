@@ -146,7 +146,9 @@ if (contactForm) {
             contactForm.reset();
         } catch (error) {
             console.error('EmailJS error:', error);
-            formMessage.textContent = 'Oops! Failed to send. Please check your EmailJS keys or email me directly.';
+            // EmailJS errors usually have a 'text' property with the exact reason
+            const errorMsg = error.text || error.message || JSON.stringify(error);
+            formMessage.textContent = 'Error: ' + errorMsg;
             formMessage.style.color = '#f87171'; // red
             formMessage.style.display = 'block';
         } finally {
