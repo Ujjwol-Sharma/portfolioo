@@ -161,3 +161,48 @@ if (contactForm) {
         }
     });
 }
+
+/* ==========================================================================
+   Premium Background Interactions
+   ========================================================================== */
+const blob1 = document.querySelector('.blob-1');
+const blob2 = document.querySelector('.blob-2');
+
+if (blob1 && blob2) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX1 = 0;
+    let currentY1 = 0;
+    let currentX2 = 0;
+    let currentY2 = 0;
+
+    // Track mouse movement
+    document.addEventListener('mousemove', (e) => {
+        // Normalize mouse coordinates to roughly -50 to 50
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 100;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 100;
+    });
+
+    // Smooth animation loop for the glow blobs
+    function animateBackground() {
+        // Scroll parallax factor
+        const scrollY = window.scrollY || window.pageYOffset;
+        const scrollOffset = scrollY * 0.05;
+
+        // Smoothly interpolate towards target mouse position (easing)
+        currentX1 += (mouseX - currentX1) * 0.05;
+        currentY1 += (mouseY - currentY1) * 0.05;
+        
+        currentX2 += (-mouseX - currentX2) * 0.03; // Inverse direction for blob 2
+        currentY2 += (-mouseY - currentY2) * 0.03;
+
+        // Apply transforms
+        blob1.style.transform = `translate(${currentX1}%, ${currentY1 + scrollOffset}%)`;
+        blob2.style.transform = `translate(${currentX2}%, ${currentY2 - (scrollOffset * 0.5)}%)`;
+
+        requestAnimationFrame(animateBackground);
+    }
+    
+    // Start animation loop
+    animateBackground();
+}
