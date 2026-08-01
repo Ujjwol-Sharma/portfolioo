@@ -1,70 +1,54 @@
 /* ==========================================================================
-   Game Specific Styles
+   Embedded Game Widget Styles
    ========================================================================== */
 
-body.game-active {
-    overflow: hidden; /* Prevent scrolling while game is active */
-}
-
-#game-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
-    z-index: 9999;
+#game-widget-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#game-container.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(1.1); /* Cinematic zoom out when fading out */
+#game-widget {
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.2), inset 0 0 50px rgba(0,0,0,0.8);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
 }
 
-/* UI Overlay */
+/* UI Overlay inside widget */
 #game-ui {
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     z-index: 10;
-    pointer-events: none; /* Let clicks pass through to the canvas */
+    pointer-events: none;
     width: 90%;
-    max-width: 600px;
 }
 
 .game-title {
-    font-size: 2.5rem;
-    font-weight: 800;
     background: linear-gradient(135deg, #a855f7, #6366f1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-}
-
-.game-subtitle {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    opacity: 0.8;
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+    margin: 0;
 }
 
 #game-message {
-    margin-top: 1.5rem;
-    font-size: 1.5rem;
+    margin-top: 5px;
+    font-size: 1rem;
     font-weight: 700;
-    min-height: 40px;
     color: #4ade80;
-    text-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
     transition: all 0.3s ease;
 }
 
@@ -75,64 +59,26 @@ body.game-active {
 
 #game-message.miss {
     color: #f87171;
-    text-shadow: 0 0 15px rgba(248, 113, 113, 0.5);
-}
-
-#skip-btn {
-    pointer-events: auto; /* Re-enable clicks for the button */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    padding: 0.5rem 1.5rem;
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-#skip-btn:hover {
-    opacity: 1;
-    background: rgba(255,255,255,0.1);
-}
-
-/* Portfolio Container Locking */
-#portfolio-container {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-    visibility: hidden;
-}
-
-#portfolio-container.unlocked {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
 }
 
 /* Canvas styling */
-#game-container canvas {
+#game-widget canvas {
     position: absolute;
     top: 0;
     left: 0;
     z-index: 1;
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.8); /* Vignette effect */
+    width: 100%;
+    height: 100%;
 }
 
-/* Camera Shake Effect */
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
-.shake {
-    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+/* Locked Sections (Blur Effect) */
+.blur-locked {
+    filter: blur(15px);
+    opacity: 0.3;
+    pointer-events: none;
+    transition: filter 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
 }
 
 /* Floating Light Particles Overlay */
@@ -145,18 +91,16 @@ body.game-active {
     z-index: 2;
     pointer-events: none;
     background-image: 
-        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+        radial-gradient(1.5px 1.5px at 10px 15px, #eee, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 20px 35px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 25px 80px, #ddd, rgba(0,0,0,0));
     background-repeat: repeat;
-    background-size: 200px 200px;
+    background-size: 100px 100px;
     opacity: 0.15;
-    animation: floating 60s linear infinite;
+    animation: floating 30s linear infinite;
 }
 
 @keyframes floating {
     0% { background-position: 0 0; }
-    100% { background-position: -200px 200px; }
+    100% { background-position: -100px 100px; }
 }

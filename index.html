@@ -18,22 +18,6 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="game.css">
 </head>
-<body class="game-active">
-
-    <!-- Game Container (Overlays everything until goal is scored) -->
-    <div id="game-container">
-        <div id="game-ui">
-            <h1 class="game-title">Score a goal to unlock my portfolio.</h1>
-            <p class="game-subtitle">Drag the ball backward to shoot!</p>
-            <div id="game-message"></div>
-            <button id="skip-btn" class="btn btn-outline" style="margin-top: 2rem;">Skip Game</button>
-        </div>
-        <!-- Matter.js Canvas will be injected here by game.js -->
-    </div>
-
-    <!-- Portfolio Container (Hidden initially) -->
-    <div id="portfolio-container">
-    
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
@@ -70,13 +54,20 @@
                 </div>
             </div>
             
-            <div class="hero-image-wrapper reveal fade-right">
-                <div class="hero-image">
-                    <img src="profile.jpg?v=2" alt="Ujjwol Sharma">
+            <div class="hero-image-wrapper reveal fade-right" id="game-widget-container">
+                <div id="game-widget" class="glass-card">
+                    <div id="game-ui">
+                        <h3 class="game-title" style="font-size: 1.2rem; margin-top: 10px;">Score a goal to unlock!</h3>
+                        <div id="game-message"></div>
+                    </div>
+                    <!-- Matter.js Canvas goes here -->
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Locked Sections -->
+    <div id="locked-sections" class="blur-locked">
 
     <!-- About Section -->
     <section id="about" class="section">
@@ -287,7 +278,8 @@
             </div>
             <p>&copy; <span id="year"></span> Ujjwol Sharma. Built with passion.</p>
         </div>
-    </div> <!-- End Portfolio Container -->
+    </footer>
+    </div> <!-- End Locked Sections -->
 
     <!-- Scripts -->
     <!-- Game Engine Dependencies -->
