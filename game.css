@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Embedded Game Widget Styles
+   Embedded Tic-Tac-Toe Widget Styles
    ========================================================================== */
 
 #game-widget-container {
@@ -18,18 +18,18 @@
     box-shadow: 0 0 30px rgba(99, 102, 241, 0.2), inset 0 0 50px rgba(0,0,0,0.8);
     border-radius: 20px;
     border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
 }
 
 /* UI Overlay inside widget */
 #game-ui {
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
     text-align: center;
     z-index: 10;
-    pointer-events: none;
     width: 90%;
+    margin-bottom: 10px;
 }
 
 .game-title {
@@ -42,34 +42,93 @@
 }
 
 #game-message {
-    margin-top: 5px;
     font-size: 1rem;
     font-weight: 700;
+    color: #cbd5e1;
+    margin-top: 5px;
+    min-height: 24px;
+}
+
+#game-message.success {
     color: #4ade80;
     text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
 }
 
-#game-message.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#game-message.miss {
+#game-message.fail {
     color: #f87171;
     text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
 }
 
-/* Canvas styling */
-#game-widget canvas {
+/* Tic Tac Toe Board */
+#tic-tac-toe-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    z-index: 5;
+}
+
+.cell {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.cell:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+.cell.x {
+    color: #4ade80; /* Neon Green */
+    text-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+}
+
+.cell.o {
+    color: #a855f7; /* Neon Purple */
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
+.cell.taken {
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Retry Button */
+#retry-btn {
     position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    z-index: 10;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#retry-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+#retry-btn.hidden {
+    display: none;
 }
 
 /* Locked Sections (Blur Effect) */
