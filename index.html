@@ -16,8 +16,23 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="game.css">
 </head>
-<body>
+<body class="game-active">
+
+    <!-- Game Container (Overlays everything until goal is scored) -->
+    <div id="game-container">
+        <div id="game-ui">
+            <h1 class="game-title">Score a goal to unlock my portfolio.</h1>
+            <p class="game-subtitle">Drag the ball backward to shoot!</p>
+            <div id="game-message"></div>
+            <button id="skip-btn" class="btn btn-outline" style="margin-top: 2rem;">Skip Game</button>
+        </div>
+        <!-- Matter.js Canvas will be injected here by game.js -->
+    </div>
+
+    <!-- Portfolio Container (Hidden initially) -->
+    <div id="portfolio-container">
     
     <!-- Navigation -->
     <nav class="navbar">
@@ -272,15 +287,24 @@
             </div>
             <p>&copy; <span id="year"></span> Ujjwol Sharma. Built with passion.</p>
         </div>
-    </footer>
+    </div> <!-- End Portfolio Container -->
 
     <!-- Scripts -->
+    <!-- Game Engine Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    
+    <!-- EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
             emailjs.init("v0FZbHwwgfAmamhYO");
         })();
     </script>
+    
+    <!-- Custom Scripts -->
     <script src="script.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
