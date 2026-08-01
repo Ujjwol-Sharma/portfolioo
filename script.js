@@ -135,7 +135,7 @@ if (contactForm) {
         try {
             // Send using EmailJS
             const SERVICE_ID = 'service_2uxwqov';
-            const TEMPLATE_ID = 'template_63oycme';
+            const TEMPLATE_ID = 'template_bqqte4a';
             
             await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, contactForm);
             
