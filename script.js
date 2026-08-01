@@ -110,17 +110,59 @@ const btnText = submitBtn.querySelector('.btn-text');
 const spinner = submitBtn.querySelector('.spinner');
 
 if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        // Basic HTML5 validation is handled by the browser because of 'required' attributes.
-        // We add this event listener to provide UI feedback BEFORE it sends to FormSubmit.
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Stop normal form submission
         
         // Show loading state
         btnText.style.display = 'none';
         spinner.style.display = 'block';
         submitBtn.style.opacity = '0.7';
+        submitBtn.disabled = true;
         submitBtn.style.cursor = 'not-allowed';
         
-        // FormSubmit handles the actual sending and captcha. 
-        // We let the default HTML form submission proceed to FormSubmit.co
+        // Reset messages
+        formMessage.textContent = '';
+        formMessage.style.display = 'none';
+        
+        // Gather data
+        const formData = new FormData(contactForm);
+        const payload = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message')
+        };
+        
+        try {
+            // Send to Netlify Function
+            const response = await fetch('/.netlify/functions/sendEmail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Success
+                formMessage.textContent = 'Message sent successfully! I will get back to you soon.';
+                formMessage.style.color = '#4ade80'; // green
+                formMessage.style.display = 'block';
+                contactForm.reset();
+            } else {
+                throw new Error(result.message || 'Error sending message');
+            }
+        } catch (error) {
+            console.error('Email error:', error);
+            formMessage.textContent = 'Oops! Failed to send. Please use the Direct Email button instead.';
+            formMessage.style.color = '#f87171'; // red
+            formMessage.style.display = 'block';
+        } finally {
+            // Restore button state
+            btnText.style.display = 'block';
+            spinner.style.display = 'none';
+            submitBtn.style.opacity = '1';
+            submitBtn.disabled = false;
+            submitBtn.style.cursor = 'pointer';
+        }
     });
 }
