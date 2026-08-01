@@ -134,9 +134,8 @@ if (contactForm) {
         
         try {
             // Send using EmailJS
-            // YOU MUST REPLACE THESE WITH YOUR ACTUAL IDS FROM EMAILJS
-            const SERVICE_ID = 'YOUR_SERVICE_ID';
-            const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+            const SERVICE_ID = 'service_2uxwqov';
+            const TEMPLATE_ID = 'template_63oycme';
             
             await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, contactForm);
             
